@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин «ТехноМаркет»</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            color: #222;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark {
+            background-color: #1e1e1e;
+            color: #eee;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        header {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+        body.dark header {
+            background: #2c2c2c;
+            box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4a90e2;
+            text-decoration: none;
+        }
+        nav a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        body.dark nav a { color: #ccc; }
+        nav a:hover { color: #4a90e2; }
+        #theme-toggle {
+            background: none;
+            border: 2px solid #4a90e2;
+            color: #4a90e2;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        #theme-toggle:hover { background: #4a90e2; color: #fff; }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .hero h1 { font-size: 3rem; margin-bottom: 20px; }
+        .hero p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 30px; }
+        .hero .btn {
+            display: inline-block;
+            background: #fff;
+            color: #4a90e2;
+            padding: 14px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .hero .btn:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+
+        .slider-section { padding: 60px 0; }
+        .slider-section h2 { text-align: center; margin-bottom: 40px; font-size: 2rem; }
+        .slider-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .slide {
+            min-width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            pad: 30px;
+            background: #fff;
+        }
+        body.dark .slide { background: #2c2c2c; }
+        .slide img {
+            width: 200px; height: 200px;
+            object-fit: contain;
+            margin-right: 30px;
+            border-radius: 12px;
+        }
+        .slide-info { max-width: 400px; }
+        .slide-info h3 { font-size: 1.8rem; margin-bottom: 10px; }
+        .slide-info p { margin-bottom: 15px; color: #555; }
+        body.dark .slide-info p { color: #aaa; }
+        .slide-info .price { font-size: 1.5rem; color: #e74c3c; font-weight: 700; }
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            border: none;
+            font-size: 2rem;
+            padding: 12px 18px;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .slider-btn:hover { background: rgba(0,0,0,0.8); }
+        .slider-btn.prev { left: 10px; }
+        .slider-btn.next { right: 10px; }
+
+        .catalog { padding: 60px 0; }
+        .catalog h2 { text-align: center; margin-bottom: 40px; font-size: 2rem; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+        }
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        body.dark .card { background: #2c2c2c; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .card img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 15px; }
+        .card h3 { font-size: 1.3rem; margin-bottom: 10px; }
+        .card .price { font-size: 1.4rem; color: #e74c3c; font-weight: 700; margin: 10px 0; }
+        .card button {
+            background: #4a90e2;
+            color: #fff;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        .card button:hover { background: #357abd; }
+
+        .contact { padding: 60px 0; }
+        .contact h2 { text-align: center; margin-bottom: 40px; font-size: 2rem; }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        form input, form textarea {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            background: #fff;
+            color: #222;
+        }
+        body.dark form input, body.dark form textarea {
+            background: #3a3a3a;
+            border-color: #555;
+            color: #eee;
+        }
+        form input:focus, form textarea:focus { border-color: #4a90e2; outline: none; }
+        form button {
+            background: #4a90e2;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        form button:hover { background: #357abd; }
+
+        footer {
+            background: #2c2c2c;
+            color: #ccc;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+        }
+        body.dark footer { background: #111; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .slide { flex-direction: column; text-align: center; }
+            .slide img { margin-right: 0; margin-bottom: 20px; width: 150px; height: 150px; }
+            .grid { grid-template-columns: 1fr; }
+            header .container { flex-direction: column; gap: 15px; }
+            nav a { margin: 0 10px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="#" class="logo">ТехноМаркет</a>
+            <nav>
+                <a href="#">Главная</a>
+                <a href="#catalog">Каталог</a>
+                <a href="#contact">Контакты</a>
+                <button id="theme-toggle">🌙 Тёмная</button>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Скидка 30% на новинки</h1>
+            <p>Только до конца месяца! Бесплатная доставка при заказе от 5000 ₽</p>
+            <a href="#catalog" class="btn">Перейти к покупкам</a>
+        </div>
+    </section>
+
+    <section class="slider-section">
+        <div class="container">
+            <h2>🔥 Хиты продаж</h2>
+            <div class="slider-wrapper">
+                <div class="slider-track" id="sliderTrack">
+                </div>
+                <button class="slider-btn prev" id="prevBtn">❮</button>
+                <button class="slider-btn next" id="nextBtn">❯</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="catalog" id="catalog">
+        <div class="container">
+            <h2>Каталог товаров</h2>
+            <div class="grid" id="catalogGrid">
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2>Связаться с нами</h2>
+            <form id="contactForm">
+                <input type="text" placeholder="Ваше имя" required>
+                <input type="email" placeholder="Email" required>
+                <textarea placeholder="Сообщение" rows="5" required></textarea>
+                <button type="submit">Отправить</button>
+            </form>
+            <p id="formFeedback" style="text-align:center; margin-top:20px; color: #4a90e2;"></p>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 ТехноМаркет. Все права защищены.</p>
+    </footer>
+
+    <script>
+        const products = [
+            { name: 'Наушники Pro', desc: 'Беспроводные, шумоподавление, 30 ч работы', price: '4 990 ₽', img: '🎧' },
+            { name: 'Умные часы', desc: 'GPS, пульс, сон,防水', price: '8 490 ₽', img: '⌚️' },
+            { name: 'Портативная колонка', desc: '20 Вт, влагозащита, 12 ч', price: '3 290 ₽', img: '🔊' },
+            { name: 'Фитнес-браслет', desc: 'Шагомер, калории, уведомления', price: '1 990 ₽', img: '📿' },
+            { name: 'Беспроводная зарядка', desc: 'Быстрая, Qi, 15 Вт', price: '1 490 ₽', img: '🔋' },
+            { name: 'Внешний аккумулятор', desc: '20000 мАч, 2 порта USB-C', price: '2 490 ₽', img: '🔌' }
+        ];
+
+        const track = document.getElementById('sliderTrack');
+        products.forEach(p => {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.innerHTML = `
+                <div style="font-size:100px;">${p.img}</div>
+                <div class="slide-info">
+                    <h3>${p.name}</h3>
+                    <p>${p.desc}</p>
+                    <div class="price">${p.price}</div>
+                </div>
+            `;
+            track.appendChild(slide);
+        });
+
+        let currentSlide = 0;
+        const slides = track.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function updateSlider() {
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlider();
+        });
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSlider();
+        });
+
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlider();
+        }, 5000);
+
+
+        const grid = document.getElementById('catalogGrid');
+        products.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div style="font-size:80px;">${p.img}</div>
+                <h3>${p.name}</h3>
+                <p>${p.desc}</p>
+                <div class="price">${p.price}</div>
+                <button>Купить</button>
+            `;
+            grid.appendChild(card);
+        });
+
+
+        const toggleBtn = document.getElementById('theme-toggle');
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            toggleBtn.textContent = document.body.classList.contains('dark') ? '☀️ Светлая' : '🌙 Тёмная';
+        });
+
+        const form = document.getElementById('contactForm');
+        const feedback = document.getElementById('formFeedback');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = form.querySelector('input[type="text"]').value.trim();
+            const email = form.querySelector('input[type="email"]').value.trim();
+            const message = form.querySelector('textarea').value.trim();
+
+            let error = '';
+
+            if (!name) {
+                error = 'Пожалуйста, введите ваше имя.';
+            } else if (!email) {
+                error = 'Пожалуйста, введите email.';
+            } else if (!isValidEmail(email)) {
+                error = 'Пожалуйста, введите корректный email (например, user@example.com).';
+            } else if (!message) {
+                error = 'Пожалуйста, напишите сообщение.';
+            }
+
+            if (error) {
+                feedback.textContent = '❌ ' + error;
+                feedback.style.color = '#e74c3c';
+                return;
+            }
+
+            const formData = {
+                name: name,
+                email: email,
+                message: message,
+                timestamp: new Date().toLocaleString()
+            };
+            console.log('✅ Данные формы отправлены:', formData);
+
+            feedback.textContent = '✅ Спасибо за заявку! Мы свяжемся с вами в ближайшее время.';
+            feedback.style.color = '#4a90e2'; // синий
+
+            form.reset();
+        });
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+    </script>
+</body>
+</html>
